@@ -17,16 +17,16 @@ Content-Type: application/json
 GET {{base}}/api/movies
 
 ### Получить одну запись
-GET {{base}}/api/movies/1
+GET {{base}}/api/movies/2
 
 ### Изменить
 PATCH {{base}}/api/movies/1
 Content-Type: application/json
 
-{ "title": "Изменённая запись" }
+{ "title": "Изменённая запись", "genre": "приколы" }
 
 ### Удалить
-DELETE {{base}}/api/movies/1
+DELETE {{base}}/api/movies/2
 
 ### После удаления должен быть 404
 GET {{base}}/api/movies/1
