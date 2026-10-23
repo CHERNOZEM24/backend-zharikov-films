@@ -8,37 +8,37 @@
 GET {{base}}/health
 
 ### Создать
-POST {{base}}/api/items
+POST {{base}}/api/movies
 Content-Type: application/json
 
-{ "title": "Первая запись" }
+{ "title": "Звездные войны. Эпизод 2:Атака клонов", "year": "2002", "genre": "Научная фантастика/фэнтези" }
 
 ### Список
-GET {{base}}/api/items
+GET {{base}}/api/movies
 
 ### Получить одну запись
-GET {{base}}/api/items/1
+GET {{base}}/api/movies/1
 
 ### Изменить
-PATCH {{base}}/api/items/1
+PATCH {{base}}/api/movies/1
 Content-Type: application/json
 
 { "title": "Изменённая запись" }
 
 ### Удалить
-DELETE {{base}}/api/items/1
+DELETE {{base}}/api/movies/1
 
 ### После удаления должен быть 404
-GET {{base}}/api/items/1
+GET {{base}}/api/movies/1
 
 ### Сломанный JSON, должен быть 400
-POST {{base}}/api/items
+POST {{base}}/api/movies
 Content-Type: application/json
 
 { "title":
 
 ### Пустое обязательное поле, должен быть 400
-POST {{base}}/api/items
+POST {{base}}/api/movies
 Content-Type: application/json
 
-{ "title": "" }
+{ "title": }
