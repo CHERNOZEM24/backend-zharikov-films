@@ -11,7 +11,7 @@ GET {{base}}/health
 POST {{base}}/api/movies
 Content-Type: application/json
 
-{ "title": "", "year": "-2002", "genre": "Научная фантастика/фэнтези" }
+{ "title": "АААААА", "year": "2012", "genre": "Фантастика" }
 
 ### Список
 GET {{base}}/api/movies
@@ -42,3 +42,9 @@ POST {{base}}/api/movies
 Content-Type: application/json
 
 { "title": }
+
+### Пагинация
+GET {{base}}/api/movies?limit=2&offset=0
+
+### Фильтр
+GET {{base}}/api/movies?genre=фантастика

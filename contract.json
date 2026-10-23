@@ -6,5 +6,11 @@
   "list_key": null,
   "create": { "title": "Первая запись" },
   "update": { "title": "Изменённая запись" },
-  "required_field": "title"
+  "required_field": "title",
+  "errors": [
+  { "body": { "title": "" }, "field": "title" },
+  { "body": { "genre": "" }, "field": "genre" },
+  { "body": { "year": -1 }, "field": "year" }
+],
+  "filter": { "param": "genre", "value": "фантастика", "other": "драма" }
 }

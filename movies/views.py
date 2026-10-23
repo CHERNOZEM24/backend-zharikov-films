@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from .serializers import MovieSerializer
+from .serializers import MovieSerializer, ListQuerySerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -11,7 +11,18 @@ next_id = 1
 
 class MovieList(APIView):
     def get(self, request):
-        return Response(list(movies.values()))
+        query = ListQuerySerializer(data=request.query_params)
+        query.is_valid(raise_exception=True)
+        q = query.validated_data
+
+        items = list(movies.values())
+        if "genre" in q:
+            items = [m for m in items if m["genre"].lower() == q["genre"].lower()]
+        if "year" in q:
+            items = [m for m in items if m["year"] == q["year"]]
+
+        start = q["offset"]
+        return Response(items[start : start + q["limit"]])
 
     def post(self, request):
         global next_id
