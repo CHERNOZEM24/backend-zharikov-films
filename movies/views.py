@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from .serializers import MovieSerializer, ListQuerySerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
 
 def health(request):
     return JsonResponse({"status": "ok"})
@@ -10,6 +11,7 @@ movies = {}
 next_id = 1
 
 class MovieList(APIView):
+    @extend_schema(parameters=[ListQuerySerializer], responses=MovieSerializer(many=True))
     def get(self, request):
         query = ListQuerySerializer(data=request.query_params)
         query.is_valid(raise_exception=True)
@@ -24,6 +26,7 @@ class MovieList(APIView):
         start = q["offset"]
         return Response(items[start : start + q["limit"]])
 
+    @extend_schema(request=MovieSerializer, responses={201: MovieSerializer})
     def post(self, request):
         global next_id
         serializer = MovieSerializer(data=request.data)
@@ -43,12 +46,14 @@ def not_found():
     return Response({"error": "Фильм не найден", "field": "id"}, status=404)\
 
 class MovieMethods(APIView):
+    @extend_schema(responses=MovieSerializer)
     def get(self, request, movie_id):
         movie = find_movie(movie_id)
         if movie is None:
             return not_found()
         return Response(movie)
 
+    @extend_schema(request=MovieSerializer, responses=MovieSerializer)
     def patch(self, request, movie_id):
         movie = find_movie(movie_id)
         if movie is None:
@@ -58,6 +63,7 @@ class MovieMethods(APIView):
         movie.update(serializer.validated_data)
         return Response(movie)
 
+    @extend_schema(responses={204: None})
     def delete(self, request, movie_id):
         movie = find_movie(movie_id)
         if movie is None:
