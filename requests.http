@@ -11,7 +11,7 @@ GET {{base}}/health
 POST {{base}}/api/movies
 Content-Type: application/json
 
-{ "title": "Звездные войны. Эпизод 2:Атака клонов", "year": "2002", "genre": "Научная фантастика/фэнтези" }
+{ "title": "", "year": "-2002", "genre": "Научная фантастика/фэнтези" }
 
 ### Список
 GET {{base}}/api/movies
