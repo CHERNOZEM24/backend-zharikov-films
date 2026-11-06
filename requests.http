@@ -8,37 +8,43 @@
 GET {{base}}/health
 
 ### Создать
-POST {{base}}/api/items
+POST {{base}}/api/movies
 Content-Type: application/json
 
-{ "title": "Первая запись" }
+{ "title": "АААААА", "year": "2012", "genre": "Фантастика" }
 
 ### Список
-GET {{base}}/api/items
+GET {{base}}/api/movies
 
 ### Получить одну запись
-GET {{base}}/api/items/1
+GET {{base}}/api/movies/2
 
 ### Изменить
-PATCH {{base}}/api/items/1
+PATCH {{base}}/api/movies/1
 Content-Type: application/json
 
-{ "title": "Изменённая запись" }
+{ "title": "Изменённая запись", "genre": "приколы" }
 
 ### Удалить
-DELETE {{base}}/api/items/1
+DELETE {{base}}/api/movies/2
 
 ### После удаления должен быть 404
-GET {{base}}/api/items/1
+GET {{base}}/api/movies/1
 
 ### Сломанный JSON, должен быть 400
-POST {{base}}/api/items
+POST {{base}}/api/movies
 Content-Type: application/json
 
 { "title":
 
 ### Пустое обязательное поле, должен быть 400
-POST {{base}}/api/items
+POST {{base}}/api/movies
 Content-Type: application/json
 
-{ "title": "" }
+{ "title": }
+
+### Пагинация
+GET {{base}}/api/movies?limit=2&offset=0
+
+### Фильтр
+GET {{base}}/api/movies?genre=фантастика
