@@ -1,9 +1,9 @@
 from django.http import JsonResponse
-from .serializers import MovieSerializer, ListQuerySerializer
+from .serializers import MovieSerializer, ListQuerySerializer, RatingSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
-from .models import Movie
+from .models import Movie, Rating
 
 def health(request):
     return JsonResponse({"status": "ok"})
@@ -67,3 +67,20 @@ class MovieMethods(APIView):
             return not_found()
         movie.delete()
         return Response(status=204)
+
+class RatingList(APIView):
+    def get(self, request, movie_id):
+        movie = find_movie(movie_id)
+        if movie is None:
+            return not_found()
+        ratings = movie.ratings.order_by("id")
+        return Response(RatingSerializer(ratings, many=True).data)
+
+    def post(self, request, movie_id):
+        movie = find_movie(movie_id)
+        if movie is None:
+            return not_found()
+        serializer = RatingSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        rating = Rating.objects.create(movie=movie, **serializer.validated_data)
+        return Response(RatingSerializer(rating).data, status=201)

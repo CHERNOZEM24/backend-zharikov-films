@@ -1,16 +1,22 @@
 {
   "base_url": "http://localhost:8000",
-  "resource": "items",
+  "resource": "movies",
   "id_field": "id",
   "missing_id": "999999",
   "list_key": null,
-  "create": { "title": "Первая запись" },
-  "update": { "title": "Изменённая запись" },
+  "create": { "title": "Матрица", "year": 1999, "genre": "фантастика" },
+  "update": { "genre": "боевик" },
   "required_field": "title",
   "errors": [
-  { "body": { "title": "" }, "field": "title" },
-  { "body": { "genre": "" }, "field": "genre" },
-  { "body": { "year": -1 }, "field": "year" }
-],
-  "filter": { "param": "genre", "value": "фантастика", "other": "драма" }
+    { "body": { "title": "" }, "field": "title" },
+    { "body": { "genre": "" }, "field": "genre" },
+    { "body": { "year": -1 }, "field": "year" }
+  ],
+  "filter": { "param": "genre", "value": "фантастика", "other": "драма" },
+  "text_field": "title",
+  "child": {
+    "resource": "ratings",
+    "create": { "viewer": "Иванов", "score": 8, "review": "Отлично" },
+    "parent_field": "movie_id"
+  }
 }

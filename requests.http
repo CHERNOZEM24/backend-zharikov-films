@@ -17,7 +17,7 @@ Content-Type: application/json
 GET {{base}}/api/movies
 
 ### Получить одну запись
-GET {{base}}/api/movies/2
+GET {{base}}/api/movies/1
 
 ### Изменить
 PATCH {{base}}/api/movies/1
@@ -29,7 +29,7 @@ Content-Type: application/json
 DELETE {{base}}/api/movies/2
 
 ### После удаления должен быть 404
-GET {{base}}/api/movies/1
+GET {{base}}/api/movies/2
 
 ### Сломанный JSON, должен быть 400
 POST {{base}}/api/movies
@@ -48,3 +48,30 @@ GET {{base}}/api/movies?limit=2&offset=0
 
 ### Фильтр
 GET {{base}}/api/movies?genre=фантастика
+
+### Оценить фильм
+POST {{base}}/api/movies/1/ratings
+Content-Type: application/json
+
+{ "viewer": "Чина", "score": 3, "review": "Отлично" }
+
+### Оценки фильма
+GET {{base}}/api/movies/1/ratings
+
+### Фильма нет, должен быть 404
+GET {{base}}/api/movies/999/ratings
+
+### Неверная оценка, должен быть 400
+POST {{base}}/api/movies/1/ratings
+Content-Type: application/json
+
+{ "viewer": "Петров", "score": 11 }
+
+### SQL-инъекция должна сохраниться как обычный текст
+POST {{base}}/api/movies
+Content-Type: application/json
+
+{ "title": "'); DROP TABLE movies_movie;--", "year": 1999, "genre": "драма" }
+
+### Список после инъекции, сервис жив и таблица на месте
+GET {{base}}/api/movies
