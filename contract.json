@@ -18,5 +18,14 @@
     "resource": "ratings",
     "create": { "viewer": "Иванов", "score": 8, "review": "Отлично" },
     "parent_field": "movie_id"
-  }
+  },
+  "rule": {
+  "description": "Один зритель оценивает фильм только один раз",
+  "parent": {},
+  "setup": [{ "method": "POST", "path": "/api/movies/{id}/ratings", "body": { "viewer": "Иванов", "score": 8 } }],
+  "violate": { "method": "POST", "path": "/api/movies/{id}/ratings", "body": { "viewer": "Иванов", "score": 5 } },
+  "expect_status": 409
+},
+"stats_path": "/api/movies/stats"
 }
+

@@ -4,6 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
 from .models import Movie, Rating
+from django.db import transaction
+from django.db.models import Avg, Count, F
 
 def health(request):
     return JsonResponse({"status": "ok"})
@@ -84,5 +86,35 @@ class RatingList(APIView):
             return not_found()
         serializer = RatingSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        rating = Rating.objects.create(movie=movie, **serializer.validated_data)
+        data = serializer.validated_data
+
+        with transaction.atomic():
+            Movie.objects.select_for_update().get(pk=movie.pk)
+            if Rating.objects.filter(movie=movie, viewer=data["viewer"]).exists():
+                return Response(
+                    {"error": "Этот зритель уже оценил фильм", "field": "viewer"},
+                    status=409,
+                )
+            rating = Rating.objects.create(movie=movie, **data)
+
         return Response(RatingSerializer(rating).data, status=201)
+
+class MovieStats(APIView):
+    @extend_schema(responses={200: dict})
+    def get(self, request):
+        rows = (
+            Movie.objects
+            .annotate(avg_score=Avg("ratings__score"), ratings_count=Count("ratings"))
+            .order_by(F("avg_score").desc(nulls_last=True), "id")
+            .values("id", "title", "avg_score", "ratings_count")[:100]
+        )
+        data = [
+            {
+                "id": r["id"],
+                "title": r["title"],
+                "avg_score": round(r["avg_score"], 2) if r["avg_score"] is not None else None,
+                "ratings_count": r["ratings_count"],
+            }
+            for r in rows
+        ]
+        return Response(data)
