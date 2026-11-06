@@ -56,4 +56,26 @@ erDiagram
 
 ## Интерфейс
 
+
+
+
+## Индекс
+
+Cписок фильмов за год (`GET /api/movies?year=2026`). 
+
+```sql
+EXPLAIN SELECT * FROM movies_movie WHERE year = 2026;
+```
+
+```
+                                  QUERY PLAN
+------------------------------------------------------------------------------
+ Bitmap Heap Scan on movies_movie  (cost=4.86..67.93 rows=74 width=60)
+   Recheck Cond: (year = 1999)
+   ->  Bitmap Index Scan on movie_year_idx  (cost=0.00..4.84 rows=74 width=0)
+         Index Cond: (year = 1999)
+(4 строки)
+```
+
+
 <!-- С лабы 4: скриншот, например ![Интерфейс](docs/screenshot.png) -->
