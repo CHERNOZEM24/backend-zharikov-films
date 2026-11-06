@@ -11,6 +11,7 @@ class ListQuerySerializer(serializers.Serializer):
     offset = serializers.IntegerField(min_value=0, default=0)
     genre = serializers.CharField(required=False)
     year = serializers.IntegerField(required=False)
+    q = serializers.CharField(required=False)
 
 class RatingSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)

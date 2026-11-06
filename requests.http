@@ -75,3 +75,15 @@ Content-Type: application/json
 
 ### Список после инъекции, сервис жив и таблица на месте
 GET {{base}}/api/movies
+
+### Поиск по названию
+GET {{base}}/api/movies?q=из
+
+### Первые пять фильмов
+GET {{base}}/api/movies?limit=5
+
+### Фильтр по жанру
+GET {{base}}/api/movies?genre=ужасы&limit=100
+
+### Оценки первого фильма
+GET {{base}}/api/movies/1/ratings

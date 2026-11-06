@@ -20,6 +20,8 @@ class MovieList(APIView):
             items = items.filter(genre__iexact=q["genre"])
         if "year" in q:
             items = items.filter(year=q["year"])
+        if "q" in q:
+            items = items.filter(title__icontains=q["q"])
 
         start = q["offset"]
         return Response(MovieSerializer(items[start : start + q["limit"]], many=True).data)

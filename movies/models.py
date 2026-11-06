@@ -4,7 +4,10 @@ from django.db import models
 class Movie(models.Model):
     title = models.CharField(max_length=50)
     year = models.IntegerField()
-    genre = models.CharField(max_length=100)
+    genre = models.CharField(max_length=100)        
+
+    class Meta:
+        indexes = [models.Index(fields=["year"], name="movie_year_idx")]
 
 class Rating(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="ratings")
