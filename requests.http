@@ -8,37 +8,82 @@
 GET {{base}}/health
 
 ### Создать
-POST {{base}}/api/items
+POST {{base}}/api/movies
 Content-Type: application/json
 
-{ "title": "Первая запись" }
+{ "title": "АААААА", "year": "2012", "genre": "Фантастика" }
 
 ### Список
-GET {{base}}/api/items
+GET {{base}}/api/movies
 
 ### Получить одну запись
-GET {{base}}/api/items/1
+GET {{base}}/api/movies/1
 
 ### Изменить
-PATCH {{base}}/api/items/1
+PATCH {{base}}/api/movies/1
 Content-Type: application/json
 
-{ "title": "Изменённая запись" }
+{ "title": "Изменённая запись", "genre": "приколы" }
 
 ### Удалить
-DELETE {{base}}/api/items/1
+DELETE {{base}}/api/movies/2
 
 ### После удаления должен быть 404
-GET {{base}}/api/items/1
+GET {{base}}/api/movies/2
 
 ### Сломанный JSON, должен быть 400
-POST {{base}}/api/items
+POST {{base}}/api/movies
 Content-Type: application/json
 
 { "title":
 
 ### Пустое обязательное поле, должен быть 400
-POST {{base}}/api/items
+POST {{base}}/api/movies
 Content-Type: application/json
 
-{ "title": "" }
+{ "title": }
+
+### Пагинация
+GET {{base}}/api/movies?limit=2&offset=0
+
+### Фильтр
+GET {{base}}/api/movies?genre=фантастика
+
+### Оценить фильм
+POST {{base}}/api/movies/1/ratings
+Content-Type: application/json
+
+{ "viewer": "Чина", "score": 3, "review": "Отлично" }
+
+### Оценки фильма
+GET {{base}}/api/movies/1/ratings
+
+### Фильма нет, должен быть 404
+GET {{base}}/api/movies/999/ratings
+
+### Неверная оценка, должен быть 400
+POST {{base}}/api/movies/1/ratings
+Content-Type: application/json
+
+{ "viewer": "Петров", "score": 11 }
+
+### SQL-инъекция должна сохраниться как обычный текст
+POST {{base}}/api/movies
+Content-Type: application/json
+
+{ "title": "'); DROP TABLE movies_movie;--", "year": 1999, "genre": "драма" }
+
+### Список после инъекции, сервис жив и таблица на месте
+GET {{base}}/api/movies
+
+### Поиск по названию
+GET {{base}}/api/movies?q=из
+
+### Первые пять фильмов
+GET {{base}}/api/movies?limit=5
+
+### Фильтр по жанру
+GET {{base}}/api/movies?genre=ужасы&limit=100
+
+### Оценки первого фильма
+GET {{base}}/api/movies/1/ratings
